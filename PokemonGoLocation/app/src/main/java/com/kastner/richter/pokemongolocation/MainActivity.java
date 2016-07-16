@@ -12,11 +12,13 @@ import android.os.Build;
 import android.provider.Settings;
 import android.provider.SyncStateContract;
 import android.support.annotation.RequiresPermission;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,16 +26,27 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
 public class MainActivity  extends FragmentActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
-    private double longitude = 0.0;
-    private double latitude = 0.0;
+    public static GoogleMap mMap;
+    public static double longitude = 0.0;
+    public static double latitude = 0.0;
+
+    boolean showSmallFloatingActionButtons = false;
+
+    private FloatingActionButton fab = null;
+    private FloatingActionButton fab1 = null;
+    private FloatingActionButton fab2 = null;
+    private FloatingActionButton fab3 = null;
+
+    private Marker marker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +56,42 @@ public class MainActivity  extends FragmentActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        this.fab = (FloatingActionButton)findViewById(R.id.fab);
+        this.fab1 = (FloatingActionButton)findViewById(R.id.fab1);
+        this.fab2 = (FloatingActionButton)findViewById(R.id.fab2);
+        this.fab3 = (FloatingActionButton)findViewById(R.id.fab3);
+
+        this.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!showSmallFloatingActionButtons){
+                    fab1.setVisibility(View.VISIBLE);
+                    fab2.setVisibility(View.VISIBLE);
+                    fab3.setVisibility(View.VISIBLE);
+                    showSmallFloatingActionButtons = true;
+                }else{
+                    fab1.setVisibility(View.GONE);
+                    fab2.setVisibility(View.GONE);
+                    fab3.setVisibility(View.GONE);
+                    showSmallFloatingActionButtons = false;
+                }
+            }
+        });
+
+        fab1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                moveMapToPosition(new LatLng(latitude, longitude));
+            }
+        });
+
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addGoogleMapsMarkerCustomIcon(new LatLng(latitude, longitude));
+            }
+        });
 
         int MyVersion = Build.VERSION.SDK_INT;
         if (MyVersion > Build.VERSION_CODES.LOLLIPOP_MR1) {
@@ -91,12 +140,18 @@ public class MainActivity  extends FragmentActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
         LatLng currentPosition = new LatLng(this.latitude, this.longitude);
-        mMap.addMarker(new MarkerOptions().position(currentPosition).title("Deine Position"));
-       // mMap.moveCamera(CameraUpdateFactory.newLatLng(currentPosition));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentPosition,16));
+        marker = mMap.addMarker(new MarkerOptions().position(currentPosition).title("Deine Position"));
+        moveMapToPosition(currentPosition);
     }
 
+    public void addGoogleMapsMarkerCustomIcon(LatLng position){
+        mMap.addMarker(new MarkerOptions().position(position).title("Deine Position")
+            .icon(BitmapDescriptorFactory.fromResource(R.drawable._4)));
+         marker.remove();
+    }
+
+    public void moveMapToPosition(LatLng position){
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position,16));
+    }
 }

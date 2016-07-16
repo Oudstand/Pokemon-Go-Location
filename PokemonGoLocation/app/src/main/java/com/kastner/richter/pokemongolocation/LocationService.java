@@ -10,6 +10,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Created by markk on 15.07.2016.
  */
@@ -127,6 +130,9 @@ public class LocationService implements LocationListener {
     @Override
     public void onLocationChanged(Location location)     {
         // do stuff here with location object
+        MainActivity.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()),16));
+        MainActivity.latitude = location.getLatitude();
+        MainActivity.longitude = location.getLongitude();
     }
 
     @Override
