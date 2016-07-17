@@ -1,4 +1,20 @@
 <resources>
     <string name="app_name">Pokemon Go Location</string>
     <string name="title_activity_maps">Map</string>
+
+    <string-array name="pokemon_names">
+        <item>Glumanda</item>
+        <item>Glutexo</item>
+    </string-array>
+
+    <string-array name="pokemon_codes">
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+    <string-array name="pokemon_icons">
+        <item>@drawable/_4</item>
+        <item>@drawable/_5</item>
+    </string-array>
+
 </resources>

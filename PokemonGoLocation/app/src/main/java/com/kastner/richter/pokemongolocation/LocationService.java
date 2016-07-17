@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * Created by markk on 15.07.2016.
@@ -39,9 +40,10 @@ public class LocationService implements LocationListener {
 
     /**
      * Singleton implementation
+     *
      * @return
      */
-    public static LocationService getLocationManager(Context context)     {
+    public static LocationService getLocationManager(Context context) {
         if (instance == null) {
             instance = new LocationService(context);
         }
@@ -51,11 +53,10 @@ public class LocationService implements LocationListener {
     /**
      * Local constructor
      */
-    public LocationService( Context context )     {
+    public LocationService(Context context) {
 
         initLocationService(context);
     }
-
 
 
     /**
@@ -65,13 +66,13 @@ public class LocationService implements LocationListener {
     private void initLocationService(Context context) {
 
 
-        if ( Build.VERSION.SDK_INT >= 23 &&
-                ContextCompat.checkSelfPermission( context, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission( context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return  ;
+        if (Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
         }
 
-        try   {
+        try {
             this.longitude = 0.0;
             this.latitude = 0.0;
             this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
@@ -82,7 +83,7 @@ public class LocationService implements LocationListener {
 
             if (forceNetwork) isGPSEnabled = false;
 
-            if (!isNetworkEnabled && !isGPSEnabled)    {
+            if (!isNetworkEnabled && !isGPSEnabled) {
                 // cannot get location
                 this.locationServiceAvailable = false;
             }
@@ -94,45 +95,47 @@ public class LocationService implements LocationListener {
                     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                    if (locationManager != null)   {
+                    if (locationManager != null) {
                         location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                         longitude = location.getLongitude();
                         latitude = location.getLatitude();
                     }
                 }//end if
 
-                if (isGPSEnabled)  {
+                if (isGPSEnabled) {
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
 
-                    if (locationManager != null)  {
+                    if (locationManager != null) {
                         location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                         longitude = location.getLongitude();
                         latitude = location.getLatitude();
                     }
                 }
             }
-        } catch (Exception ex)  {
+        } catch (Exception ex) {
 
         }
     }
 
-    public double getLongitude(){
+    public double getLongitude() {
         return this.longitude;
     }
 
-    public double getLatitude(){
+    public double getLatitude() {
         return this.latitude;
     }
 
 
     @Override
-    public void onLocationChanged(Location location)     {
+    public void onLocationChanged(Location location) {
         // do stuff here with location object
-        MainActivity.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()),16));
+        MainActivity.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16));
         MainActivity.latitude = location.getLatitude();
         MainActivity.longitude = location.getLongitude();
+        MainActivity.currentPositionMarker.remove();
+        MainActivity.currentPositionMarker = MainActivity.mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title("Deine Position"));
     }
 
     @Override

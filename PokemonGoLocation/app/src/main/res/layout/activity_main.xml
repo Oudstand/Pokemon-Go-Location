@@ -20,12 +20,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:layout_margin="16dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:src="@drawable/ic_setting_light"
         app:backgroundTint="@color/abc_primary_text_material_dark"
-        app:fabSize="normal" />
+        app:fabSize="normal"
+        android:layout_marginBottom="70dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab1"
@@ -68,5 +70,19 @@
         app:backgroundTint="@color/abc_primary_text_material_dark"
         android:visibility="gone"
         android:src="@drawable/places_ic_search" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:layout_above="@+id/fab3"
+        android:layout_alignParentRight="true"
+        app:fabSize="mini"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="16dp"
+        app:backgroundTint="@color/abc_primary_text_material_dark"
+        android:visibility="gone"
+        android:src="@drawable/places_ic_clear" />
 
 </RelativeLayout>
